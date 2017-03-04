@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/ra00l/ownzones/issues"
   },
-  "homepage": "https://github.com/ra00l/ownzones#readme"
+  "homepage": "https://github.com/ra00l/ownzones#readme",
+  "dependencies": {
+    "gm": "^1.23.0",
+    "sharp": "^0.17.2"
+  }
 }

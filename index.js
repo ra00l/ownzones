@@ -1,34 +1,45 @@
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
 const url = require('url');
+const ImageHelper = require('./ImageHelper');
+
+const gm = require('gm');
 
 http.createServer(function (request, response) {
-
-	var urlParsed = url.parse(request.url, true);
-	console.log(urlParsed);
 
 	if(request.url.indexOf('/stats') > -1) {
 		return writeStats(response);
 	}
 	else {
 		//match image name, extension and size
-		var m = request.url.match(/\/image\/(.+?)\.(jpg|jpeg|png|gif)\?size=(.*?)(?:$|&)/);
+		var img = new ImageHelper(request.url);
 
-		if(!!m) {
-			var imgName = m[1];
-			var extName = m[2];
-			var size = m[3];
-			var spl = size.split('x');
-			var w = +spl[0] || 0; //avoid NAN
-			var h = +spl[1] || 0;
+		if (!img || img.error) return write404(response, img);
 
-			if(!imgName || !extName || (!w && !h))
-				return write404(response);
+		//check cached image existance on disk
+		img.getCached(function found(byteArr) { //found in cache, write to response
+			imgBytes(response, byteArr, img.extName);
+		},
+		function notfound() { //not in cache, continue...
+			write404(response, img);
+			// //check raw image existance on disk
+			//
+			// img.getOriginal(function() {
+			//
+			// }, function() {
+			//
+			// });
 
-			return imgBytes(response, extName);
-		}
+		});
 
-		return write404(response);
+
+
+
+		//resize?
+
+
+		//return imgBytes(response, extName);
 	}
 
 	function writeStats(res) {
@@ -43,19 +54,18 @@ http.createServer(function (request, response) {
 		res.end();
 	}
 
-	function imgBytes(res, extName) {
+	function imgBytes(res, imgData, extName) {
 
-
-		var img = fs.readFile('./img-raw/logo.png', function(err, imgData) {
-			if(err) {
-				res.writeHead(500, { 'Content-Type': 'text/plain' });
-				res.write("Server error: " + err);
-				return res.end();
-			}
+		// var img = fs.readFile('./img-raw/logo.png', function(err, imgData) {
+		// 	if(err) {
+		// 		res.writeHead(500, { 'Content-Type': 'text/plain' });
+		// 		res.write("Server error: " + err);
+		// 		return res.end();
+		// 	}
 
 			res.writeHead(200, { 'Content-Type': 'image/' + extName });
 			res.end(imgData, 'binary');
-		});
+		//});
 	}
 
 }).listen(1337);
