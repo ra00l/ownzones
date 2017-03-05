@@ -4,8 +4,6 @@ const path = require('path');
 const url = require('url');
 const ImageHelper = require('./ImageHelper');
 
-const gm = require('gm');
-
 http.createServer(function (request, response) {
 
 	if(request.url.indexOf('/stats') > -1) {
@@ -17,29 +15,13 @@ http.createServer(function (request, response) {
 
 		if (!img || img.error) return write404(response, img);
 
-		//check cached image existance on disk
+		//check cached image existance on disk. If not there, creat it!
 		img.getCached(function found(byteArr) { //found in cache, write to response
 			imgBytes(response, byteArr, img.extName);
 		},
 		function notfound() { //not in cache, continue...
 			write404(response, img);
-			// //check raw image existance on disk
-			//
-			// img.getOriginal(function() {
-			//
-			// }, function() {
-			//
-			// });
-
 		});
-
-
-
-
-		//resize?
-
-
-		//return imgBytes(response, extName);
 	}
 
 	function writeStats(res) {
@@ -48,24 +30,15 @@ http.createServer(function (request, response) {
 		res.end();
 	}
 
-	function write404(res) {
-		res.writeHead(404, { 'Content-Type': 'text/plain' });
-		res.write("Sorry, the page you're looking for doesn't exist!");
+	function write404(res, img) {
+		res.writeHead(404, { 'Content-Type': 'text/json' });
+		res.write(JSON.stringify({ error: (img && img.error) || "Sorry, the page you're looking for doesn't exist!" }));
 		res.end();
 	}
 
 	function imgBytes(res, imgData, extName) {
-
-		// var img = fs.readFile('./img-raw/logo.png', function(err, imgData) {
-		// 	if(err) {
-		// 		res.writeHead(500, { 'Content-Type': 'text/plain' });
-		// 		res.write("Server error: " + err);
-		// 		return res.end();
-		// 	}
-
-			res.writeHead(200, { 'Content-Type': 'image/' + extName });
-			res.end(imgData, 'binary');
-		//});
+		res.writeHead(200, { 'Content-Type': 'image/' + extName });
+		res.end(imgData, 'binary');
 	}
 
 }).listen(1337);

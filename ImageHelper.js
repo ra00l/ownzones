@@ -59,31 +59,33 @@ module.exports = function(url) {
 	this.getOriginal = function(success, fail) {
 		//var self = this;
 		var originalImgPath = path.join('./img-raw', this.imgName + '.' + this.extName);
-		fs.stat(originalImgPath, function (err) {
+		fs.stat(originalImgPath, processOriginal.bind(this));
+
+		function processOriginal(err) {
 			if(err) {
 				console.log('could not found original image', originalImgPath, err);
 				return fail();
 			}
 
-			fs.stat(path.dirname(this.cachedImagePath), function(err) {
-				if(err) {
-					fs.mkdirSync(path.dirname(this.cachedImagePath));
-				}
+			fs.stat(path.dirname(this.cachedImagePath), doResize.bind(this));
+		}
 
-				sharp(originalImgPath)
-					.resize(this.w, this.h)
-					.toFile(this.cachedImagePath, function (err, info) {
-						if (err) {
-							console.log('could not write resized image', this.cachedImagePath, err);
-							fail();
-						}
-						success(fs.readFileSync(this.cachedImagePath)); //should use the async method, but I hope it's tolerable :D
-					}.bind(this));
-			}.bind(this));
-		}.bind(this));
+		function doResize(err) {
+			if(err) {
+				fs.mkdirSync(path.dirname(this.cachedImagePath));
+			}
+
+			sharp(originalImgPath)
+				.resize(this.w, this.h)
+				.toFile(this.cachedImagePath, doneResizing.bind(this));
+		}
+
+		function doneResizing(err, info) {
+			if (err) {
+				console.log('could not write resized image', this.cachedImagePath, err);
+				fail();
+			}
+			success(fs.readFileSync(this.cachedImagePath)); //should use the async method, but I hope it's tolerable :D
+		}
 	};
 };
-
-// gm("image.png").size(function(err, value){
-// 	// note : value may be undefined
-// })

@@ -4,7 +4,8 @@
   "description": "test project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+      "test": "mocha",
+      "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,8 @@
   "dependencies": {
     "gm": "^1.23.0",
     "sharp": "^0.17.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
   }
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API test</title>
+    <style type="text/css">
+        html, body {
+            margin:0; padding:0;
+        }
+        img {border: solid 1px #000; }
+    </style>
+</head>
+<body>
+    <h1>Ownzones test</h1>
+    <div>
+        <img data-original="http://localhost:1337/image/logo.png" src="transparent.png" />
+        <img data-original="http://localhost:1337/image/cta-phone.png" src="transparent.png" />
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+        //I know, jquery is so yesterday, but gets the job done for this test
+        var currT = null;
+        $(function() {
+        	$(window).on('resize', function() {
+        		//poor man's debounce :)
+        		if(currT) clearTimeout(currT);
+				currT = setTimeout(resizeImages, 100);
+            });
+			resizeImages();
+
+        	function resizeImages() {
+        		var winWidth = $(window).width();
+        		$('img').each(function() {
+                    var $img = $(this);
+                    var originalUrl = $img.attr('data-original');
+                    $img.attr('src', originalUrl + '?size=' + winWidth);
+                });
+            }
+        })
+    </script>
+</body>
+</html>
