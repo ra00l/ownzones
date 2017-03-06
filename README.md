@@ -9,15 +9,17 @@ How to use
 Please use this API resposibly! Even though it's possible, don't specify both width and height unless you know what you're doing :)
 
 To resize by both width & height, call: 
-http://localhost:1337/image/logo.png?size=100x100
+__http://localhost:1337/image/logo.png?size=100x100__
 This will send an 100x100 image, scaled.
 
 The recommendation would be to use either width or height, to keep the image's scale appropriate.
 For example, generate a w 100 image:
-http://localhost:1337/image/logo.png?size=100
+__http://localhost:1337/image/logo.png?size=100__
 
 or a h 100 image (x needs to stay for height, but can miss for width):
-http://localhost:1337/image/logo.png?size=x100
+__http://localhost:1337/image/logo.png?size=x100__
+
+Stats are available at __http://localhost:1337/stats__
 
 I've also created a test html page. You can either open it as a file in the browser, or
   ```

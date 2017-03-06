@@ -51,7 +51,7 @@ module.exports = function(url) {
 					console.log('error reading cached image!');
 					return fail();
 				}
-				return success(imgData);
+				return success(imgData, true);
 			});
 		}.bind(this));
 	};
@@ -85,7 +85,7 @@ module.exports = function(url) {
 				console.log('could not write resized image', this.cachedImagePath, err);
 				fail();
 			}
-			success(fs.readFileSync(this.cachedImagePath)); //should use the async method, but I hope it's tolerable :D
+			success(fs.readFileSync(this.cachedImagePath), false); //should use the async method, but I hope it's tolerable :D
 		}
 	};
 };
