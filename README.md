@@ -1,7 +1,12 @@
 Demo project for Ownzones
 ========================
 
-To start it, use node index.js
+To start the project 
+```
+  npm install
+  npm start
+```
+
 I tried to be as lean as possible, using the minimum amount of libs. 
 
 How to use
