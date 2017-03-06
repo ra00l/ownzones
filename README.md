@@ -27,8 +27,12 @@ I've also created a test html page. You can either open it as a file in the brow
 
 Constraints
 --------
-Image name needs to be unique!!!
+__Image name needs to be unique__
 If you use, for example, logo.png and logo.jpg, you might receive the wrong resized image. This can be bypassed with some extra code, but I find the constraint resonable.
+
+__Resize width / height are between 1 and 16383__ 
+(http://sharp.dimens.io/en/stable/api-resize/)
+
 
 Good to knows
 -------------
@@ -44,3 +48,10 @@ Things that can improve the tiny project:
  - Losslessly compress the pngs with google's zoopfli / other png optimizers. This takes a lot CPU, but can save bandwidth (tests I've done shave ~5-10% of the image size). Can go further with lossy compression, giving a 90% quality image, with a lot more size shaved. Can use kraken.io for that or a commandline tool.
  - 
   
+  
+Tests
+-------------
+Run tests using 
+```javascript
+    npm test
+```

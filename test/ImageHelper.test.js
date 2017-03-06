@@ -19,3 +19,4 @@ describe('ImageHelper', function() {
 		});
 	});
 });
+
